@@ -36,12 +36,6 @@ RUN docker-php-ext-install pdo_mysql \
     && docker-php-ext-install exif \
     && docker-php-ext-install bcmath
 
-#RUN rm -r /tmp/pear \
-#    && apt-get remove libicu-dev icu-devtools -y \
-#    && apt-get purge -y --auto-remove \
-#    && apt-get install -y imagemagick-6-common libmagickwand-6.q16-6 \
-#    && apt-get clean && rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*
-
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN set -eux; \
@@ -53,10 +47,8 @@ RUN set -eux; \
 		echo 'opcache.revalidate_freq=2'; \
 		echo 'opcache.fast_shutdown=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
-# https://wordpress.org/support/article/editing-wp-config-php/#configure-error-logging
+
 RUN { \
-# https://www.php.net/manual/en/errorfunc.constants.php
-# https://github.com/docker-library/wordpress/issues/420#issuecomment-517839670
 		echo 'error_reporting = E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING | E_RECOVERABLE_ERROR'; \
 		echo 'display_errors = Off'; \
 		echo 'display_startup_errors = Off'; \
@@ -69,6 +61,6 @@ RUN { \
 	} > /usr/local/etc/php/conf.d/error-logging.ini
 
 COPY entrypoint.sh /etc/entrypoint.sh
-COPY nginx-wordpress.conf /etc/nginx/sites-enabled/default
+COPY nginx-drupal.conf /etc/nginx/sites-enabled/default
 
 ENTRYPOINT ["/etc/entrypoint.sh"] 
